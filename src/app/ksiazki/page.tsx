@@ -30,6 +30,7 @@ function pluralAnaliz(count: number): string {
 export default function KsiazkiPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [sort, setSort] = useState<SortOption>("default");
+  const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
     let books = [...allBooks];
@@ -37,6 +38,13 @@ export default function KsiazkiPage() {
     if (activeCategory !== "all") {
       const cat = categories.find((c) => c.slug === activeCategory);
       if (cat) books = books.filter((b) => b.category === cat.name);
+    }
+
+    const q = search.trim().toLowerCase();
+    if (q) {
+      books = books.filter(
+        (b) => b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)
+      );
     }
 
     if (sort === "rating") {
@@ -48,21 +56,22 @@ export default function KsiazkiPage() {
     }
 
     return books;
-  }, [activeCategory, sort]);
+  }, [activeCategory, sort, search]);
 
   function reset() {
     setActiveCategory("all");
     setSort("default");
+    setSearch("");
   }
 
   return (
     <div className="min-h-screen bg-[#F6F6F6]">
 
-      {/* Top bar: breadcrumb + sort */}
+      {/* Top bar: breadcrumb + search + sort */}
       <div className="bg-[#FFD400] border-b border-[#e6bf00] px-4 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center gap-3">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-1.5 text-sm font-medium text-black/70">
+          <nav className="flex items-center gap-1.5 text-sm font-medium text-black/70 shrink-0">
             <Link href="/" className="hover:text-black transition-colors">Strona główna</Link>
             <svg className="w-3.5 h-3.5 text-black/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
@@ -70,11 +79,38 @@ export default function KsiazkiPage() {
             <span className="text-black font-semibold">Książki</span>
           </nav>
 
+          {/* Search */}
+          <div className="relative flex-1">
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40 pointer-events-none"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Szukaj po tytule lub autorze..."
+              className="w-full pl-9 pr-8 py-1.5 rounded-lg text-sm text-black bg-white/70 placeholder-black/40 border border-black/10 focus:outline-none focus:ring-2 focus:ring-black/20"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-black/40 hover:text-black transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+
           {/* Sort */}
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortOption)}
-            className="border border-black/20 rounded-lg px-3 py-1.5 text-sm text-black bg-white/70 focus:outline-none focus:ring-2 focus:ring-black/20 cursor-pointer"
+            className="border border-black/20 rounded-lg px-3 py-1.5 text-sm text-black bg-white/70 focus:outline-none focus:ring-2 focus:ring-black/20 cursor-pointer shrink-0"
           >
             <option value="default">Najnowsze</option>
             <option value="rating">Najwyżej oceniane</option>
