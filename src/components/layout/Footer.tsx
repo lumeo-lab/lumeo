@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import NewsletterForm from "@/components/ui/NewsletterForm";
 
 const menuLinks = [
   { label: "Strona główna", href: "/" },
@@ -36,6 +37,19 @@ export default function Footer() {
   return (
     <footer className="bg-[#0a0a0a] text-white">
       <div className="max-w-7xl mx-auto px-4 py-14">
+        {/* Newsletter strip */}
+        <div className="border-b border-white/10 pb-10 mb-10">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div>
+              <h3 className="text-lg font-extrabold text-white mb-1">Bądź na bieżąco</h3>
+              <p className="text-gray-400 text-sm">Zapisz się na newsletter i otrzymuj porady z nowych analiz.</p>
+            </div>
+            <div className="w-full sm:w-auto sm:min-w-[360px]">
+              <NewsletterForm />
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand column */}
           <div>

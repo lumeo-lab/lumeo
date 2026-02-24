@@ -7,12 +7,30 @@ export default function Newsletter() {
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !consent) return;
-    // TODO: integrate with email service
-    setSubmitted(true);
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, name }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setError("Coś poszło nie tak. Spróbuj ponownie.");
+      }
+    } catch {
+      setError("Coś poszło nie tak. Spróbuj ponownie.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,12 +80,15 @@ export default function Newsletter() {
                 Wyrażam zgodę na przetwarzanie moich danych osobowych przez Lumeo w celu wysyłki newslettera. Mogę się wypisać w dowolnym momencie.
               </span>
             </label>
+            {error && (
+              <p className="text-sm text-red-700 font-medium">{error}</p>
+            )}
             <button
               type="submit"
-              disabled={!consent}
+              disabled={!consent || loading}
               className="w-full bg-black text-white font-bold py-3.5 rounded-xl hover:bg-gray-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              Odbierz 3 darmowe analizy →
+              {loading ? "Zapisywanie..." : "Odbierz 3 darmowe analizy →"}
             </button>
           </form>
         )}

@@ -36,6 +36,11 @@ export default function RejestracjaPage() {
     if (error) {
       setError(error);
     } else {
+      fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, name: fullName }),
+      }).catch(() => {});
       setSuccess(true);
     }
     setLoading(false);
