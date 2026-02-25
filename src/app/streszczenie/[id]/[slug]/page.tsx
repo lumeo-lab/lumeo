@@ -1,11 +1,13 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { allBooks } from "@/lib/data";
 import { useBookStatus } from "@/context/BookStatusContext";
+import { useAuth } from "@/context/AuthContext";
+import { getSupabase } from "@/lib/supabase";
 import type { Analysis } from "@/lib/analysis-types";
 import { analysisJakZdobycPrzyjaciol } from "@/lib/analysis-jak-zdobyc";
 
@@ -170,6 +172,100 @@ function getAnalysis(bookId: number, category: string): Analysis {
   return analysisContent[category] ?? analysisContent["Produktywność"];
 }
 
+/* ── Subscription hook ──────────────────────────────── */
+function useSubscription() {
+  const { user } = useAuth();
+  const [status, setStatus] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user?.id) {
+      setStatus(null);
+      setLoading(false);
+      return;
+    }
+    const sb = getSupabase();
+    if (!sb) { setLoading(false); return; }
+
+    sb.from("profiles")
+      .select("subscription_status")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => {
+        setStatus(data?.subscription_status ?? null);
+        setLoading(false);
+      });
+  }, [user?.id]);
+
+  const isActive = status === "active" || status === "trialing";
+  return { isActive, loading };
+}
+
+/* ── Paywall component ──────────────────────────────── */
+function Paywall({ bookTitle }: { bookTitle: string }) {
+  const { user, session } = useAuth();
+  const [loading, setLoading] = useState(false);
+
+  async function handleCheckout(plan: "monthly" | "yearly") {
+    if (!user || !session) {
+      window.location.href = "/rejestracja?plan=" + plan;
+      return;
+    }
+    setLoading(true);
+    const res = await fetch("/api/stripe/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plan, accessToken: session.access_token }),
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+    else setLoading(false);
+  }
+
+  return (
+    <div className="relative min-h-[60vh] flex items-center justify-center">
+      {/* Blurred preview */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+        <div className="max-w-2xl mx-auto px-4 py-10 opacity-20 blur-sm">
+          <p className="text-gray-700 leading-relaxed mb-4 text-[15px]">Ta analiza zawiera kluczowe idee z książki {bookTitle}. Subskrybenci Lumeo mają dostęp do ponad 130 starannie wyselekcjonowanych analiz...</p>
+          <blockquote className="border-l-4 border-[#FFD400] bg-[#FFFCED] px-5 py-4 rounded-r-xl my-5">
+            <p className="text-gray-800 font-medium italic">„Fragmenty cytatu z tej analizy są dostępne tylko dla subskrybentów..."</p>
+          </blockquote>
+        </div>
+      </div>
+      {/* Paywall card */}
+      <div className="relative z-10 bg-white rounded-2xl border border-gray-200 shadow-xl p-8 mx-4 max-w-md w-full text-center">
+        <div className="w-14 h-14 bg-[#FFD400] rounded-2xl flex items-center justify-center mx-auto mb-5">
+          <svg className="w-7 h-7 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h2 className="text-xl font-extrabold text-black mb-2">Odblokuj tę analizę</h2>
+        <p className="text-gray-500 text-sm mb-6">
+          Pełny dostęp do tej i ponad 130 innych analiz — od <strong>39 zł / miesiąc</strong>.
+        </p>
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={() => handleCheckout("yearly")}
+            disabled={loading}
+            className="w-full bg-[#FFD400] hover:bg-yellow-300 text-black font-bold py-3 rounded-xl text-sm transition-colors disabled:opacity-60"
+          >
+            {loading ? "Przekierowuję..." : "Zacznij 7 dni za darmo →"}
+          </button>
+          <button
+            onClick={() => handleCheckout("monthly")}
+            disabled={loading}
+            className="w-full bg-gray-100 hover:bg-gray-200 text-black font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:opacity-60"
+          >
+            Plan miesięczny (39 zł/mies.)
+          </button>
+        </div>
+        <p className="text-xs text-gray-400 mt-4">Bez zobowiązań · Anuluj kiedy chcesz · Gwarancja zwrotu 14 dni</p>
+      </div>
+    </div>
+  );
+}
+
 /* ── Reading components ─────────────────────────────── */
 function ContentBlock({ block }: { block: { type: string; text: string } }) {
   if (block.type === "h3") {
@@ -222,6 +318,10 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
   const { isInList, toggle } = useBookStatus();
   const finished = isInList(book.id, "finished");
   const liked = isInList(book.id, "favorites");
+  const { isActive: hasSubscription, loading: subLoading } = useSubscription();
+
+  const isFree = (book as { isFree?: boolean }).isFree === true;
+  const canRead = isFree || hasSubscription;
 
   const analysis = getAnalysis(book.id, book.category);
   const [activeSection, setActiveSection] = useState(analysis.sections[0].id);
@@ -356,6 +456,11 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
 
           {/* Main reading area */}
           <main>
+            {/* Paywall — shown for non-free books without subscription */}
+            {!subLoading && !canRead ? (
+              <Paywall bookTitle={book.title} />
+            ) : (
+            <>
             {/* Intro card — only show on first section */}
             {currentIndex === 0 && (
               <div className="bg-[#FFD400] rounded-2xl p-6 mb-6">
@@ -452,6 +557,8 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
                 ))}
               </div>
             </div>
+            </>
+            )}
 
           </main>
         </div>
