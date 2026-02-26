@@ -2103,7 +2103,7 @@ export const allBooks = [
 
 export const freeBooks = allBooks.filter(b => b.isFree);
 
-export const recentBooks = allBooks.slice(0, 12);
+export const recentBooks = [...allBooks].reverse().slice(0, 12);
 
 export const howItWorks = [
   {

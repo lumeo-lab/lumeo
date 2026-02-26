@@ -36,7 +36,7 @@ export default function KsiazkiPage() {
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
-    let books = [...allBooks];
+    let books = [...allBooks].reverse();
 
     if (activeCategory !== "all") {
       const cat = categories.find((c) => c.slug === activeCategory);
