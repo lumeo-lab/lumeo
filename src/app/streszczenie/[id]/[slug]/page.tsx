@@ -354,7 +354,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
         </div>
       )}
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex gap-5 items-start">
 
           {/* TOC icon — desktop only, sticky po lewej */}
@@ -394,7 +394,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
             )}
 
             {/* Section content */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8">
+            <div className="bg-white rounded-2xl border border-gray-100 p-8 sm:p-12">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-bold text-[#7a5f00] bg-[#FFFCED] px-2 py-0.5 rounded-full">
                   Rozdział {currentIndex + 1} z {analysis.sections.length}
