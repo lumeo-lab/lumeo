@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { CheckoutButton } from "./PricingButtons";
 
 export const metadata: Metadata = {
   title: "Cennik — Lumeo",
@@ -48,8 +47,7 @@ const faqPricing = [
   },
 ];
 
-export default async function CennikPage({ searchParams }: { searchParams: Promise<{ success?: string }> }) {
-  const { success } = await searchParams;
+export default function CennikPage() {
   const monthlyPrice = 39;
   const yearlyTotal = 389;
   const yearlyPerMonth = Math.round(yearlyTotal / 12);
@@ -57,18 +55,6 @@ export default async function CennikPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="min-h-screen bg-[#F6F6F6]">
-
-      {/* Success banner */}
-      {success && (
-        <div className="bg-green-600 text-white px-4 py-3">
-          <div className="max-w-4xl mx-auto flex items-center gap-3">
-            <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-            </svg>
-            <p className="text-sm font-semibold">Płatność zakończona sukcesem! Twoja subskrypcja jest aktywna. Możesz już czytać wszystkie analizy.</p>
-          </div>
-        </div>
-      )}
 
       {/* Hero */}
       <div className="bg-[#FFD400] border-b border-[#e6bf00]">
@@ -110,12 +96,12 @@ export default async function CennikPage({ searchParams }: { searchParams: Promi
               ))}
             </ul>
 
-            <CheckoutButton
-              plan="monthly"
-              className="w-full text-center bg-gray-100 hover:bg-gray-200 text-black font-bold py-3 rounded-xl text-sm transition-colors disabled:opacity-60"
+            <Link
+              href="/rejestracja"
+              className="w-full text-center bg-gray-100 hover:bg-gray-200 text-black font-bold py-3 rounded-xl text-sm transition-colors"
             >
-              Wybierz plan miesięczny
-            </CheckoutButton>
+              Załóż konto
+            </Link>
           </div>
 
           {/* Yearly — highlighted */}
@@ -149,12 +135,12 @@ export default async function CennikPage({ searchParams }: { searchParams: Promi
               ))}
             </ul>
 
-            <CheckoutButton
-              plan="yearly"
-              className="w-full text-center bg-[#FFD400] hover:bg-yellow-300 text-black font-bold py-3 rounded-xl text-sm transition-colors disabled:opacity-60"
+            <Link
+              href="/rejestracja"
+              className="w-full text-center bg-[#FFD400] hover:bg-yellow-300 text-black font-bold py-3 rounded-xl text-sm transition-colors"
             >
-              Wybierz plan roczny
-            </CheckoutButton>
+              Załóż konto
+            </Link>
           </div>
 
         </div>
@@ -234,15 +220,15 @@ export default async function CennikPage({ searchParams }: { searchParams: Promi
           <h2 className="text-2xl font-extrabold text-white mb-2">Gotowy, żeby zacząć?</h2>
           <p className="text-gray-400 text-sm mb-7">Dołącz do tysięcy czytelników, którzy uczą się efektywniej z Lumeo.</p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <CheckoutButton
-              plan="yearly"
-              className="inline-flex items-center gap-2 bg-[#FFD400] hover:bg-yellow-300 text-black font-bold px-7 py-3 rounded-xl text-sm transition-colors disabled:opacity-60"
+            <Link
+              href="/rejestracja"
+              className="inline-flex items-center gap-2 bg-[#FFD400] hover:bg-yellow-300 text-black font-bold px-7 py-3 rounded-xl text-sm transition-colors"
             >
-              Zacznij 7 dni za darmo
+              Załóż konto
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
-            </CheckoutButton>
+            </Link>
             <Link
               href="/ksiazki"
               className="inline-flex items-center gap-2 border border-white/20 hover:border-white text-white font-semibold px-7 py-3 rounded-xl text-sm transition-colors"
