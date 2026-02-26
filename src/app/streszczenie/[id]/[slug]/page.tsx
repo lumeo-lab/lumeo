@@ -272,7 +272,7 @@ function ContentBlock({ block }: { block: { type: string; text: string } }) {
     return <h3 className="text-base font-extrabold text-black mt-7 mb-3 pb-2 border-b border-gray-200">{block.text}</h3>;
   }
   if (block.type === "p") {
-    return <p className="text-gray-700 leading-relaxed mb-4 text-[15px]">{block.text}</p>;
+    return <p className="text-gray-700 leading-relaxed mb-4 text-[15px] text-justify">{block.text}</p>;
   }
   if (block.type === "quote") {
     return (
@@ -295,13 +295,13 @@ function ContentBlock({ block }: { block: { type: string; text: string } }) {
   }
   if (block.type === "lumeo") {
     return (
-      <div className="border border-[#FFD400] bg-white rounded-xl px-5 py-4 my-5 flex gap-3">
+      <div className="border border-[#FFD400]/60 bg-[#FFFCED] rounded-xl px-5 py-4 my-5 flex gap-3">
         <div className="shrink-0">
           <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#FFD400] text-black font-black text-[10px] mt-0.5">L</span>
         </div>
         <div>
           <p className="text-xs font-bold text-[#7a5f00] uppercase tracking-wider mb-1">Komentarz Lumeo</p>
-          <p className="text-sm text-gray-700 leading-relaxed">{block.text}</p>
+          <p className="text-sm text-gray-700 leading-relaxed text-justify">{block.text}</p>
         </div>
       </div>
     );
@@ -325,6 +325,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
 
   const analysis = getAnalysis(book.id, book.category);
   const [activeSection, setActiveSection] = useState(analysis.sections[0].id);
+  const [tocOpen, setTocOpen] = useState(false);
 
   const currentIndex = analysis.sections.findIndex(s => s.id === activeSection);
   const prevSection = currentIndex > 0 ? analysis.sections[currentIndex - 1] : null;
@@ -346,6 +347,16 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
             </svg>
             Wróć
           </Link>
+          <div className="w-px h-5 bg-gray-200 shrink-0" />
+          <button
+            onClick={() => setTocOpen(true)}
+            className="flex items-center gap-1.5 text-sm font-semibold text-gray-600 hover:text-black bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors shrink-0"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <span className="hidden sm:inline">Spis treści</span>
+          </button>
           <div className="w-px h-5 bg-gray-200 shrink-0" />
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <div className="relative w-6 h-8 shrink-0 hidden sm:block">
@@ -388,72 +399,62 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-[260px_1fr] gap-8">
-
-          {/* TOC sidebar */}
-          <aside className="hidden lg:block">
-            <div className="sticky top-20 flex flex-col gap-4">
-
-              {/* Book info */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-4 flex gap-3">
-                <div className="relative w-12 h-16 shrink-0 bg-[#F0F0F0] rounded-lg overflow-hidden">
-                  <Image src={book.cover} alt={book.title} fill className="object-contain p-0.5" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs font-bold text-black leading-snug line-clamp-2">{book.title}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{book.author}</p>
-                  <div className="flex items-center gap-1 mt-1.5">
-                    <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="text-[10px] text-gray-400">{book.readTime} min</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* TOC */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-4">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Spis treści</p>
-                <div className="flex flex-col gap-0.5">
-                  {analysis.sections.map((s, i) => (
-                    <button
-                      key={s.id}
-                      onClick={() => setActiveSection(s.id)}
-                      className={`flex items-start gap-2.5 w-full text-left px-3 py-2.5 rounded-xl text-xs transition-all ${
-                        activeSection === s.id
-                          ? "bg-[#FFD400] text-black font-bold"
-                          : "text-gray-600 hover:bg-gray-50 hover:text-black"
-                      }`}
-                    >
-                      <span className={`shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black mt-0.5 ${
-                        activeSection === s.id ? "bg-black text-[#FFD400]" : "bg-gray-100 text-gray-400"
-                      }`}>
-                        {i + 1}
-                      </span>
-                      <span className="leading-snug">{s.title}</span>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Progress */}
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <div className="flex items-center justify-between text-xs text-gray-400 mb-1.5">
-                    <span>Postęp</span>
-                    <span className="font-bold text-black">{Math.round(((currentIndex + 1) / analysis.sections.length) * 100)}%</span>
-                  </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#FFD400] rounded-full transition-all duration-300"
-                      style={{ width: `${((currentIndex + 1) / analysis.sections.length) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-
+      {/* TOC Drawer */}
+      {tocOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setTocOpen(false)} />
+          <div className="relative ml-auto w-full sm:w-[420px] max-w-[90vw] bg-white h-full overflow-y-auto shadow-2xl flex flex-col">
+            {/* Nagłówek drawera */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 sticky top-0 bg-white z-10">
+              <h2 className="font-extrabold text-xl text-black">Spis treści</h2>
+              <button onClick={() => setTocOpen(false)} className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-          </aside>
+            {/* Info o książce */}
+            <div className="px-6 py-5 border-b border-gray-100 flex gap-4 items-center">
+              <div className="relative w-14 h-[88px] shrink-0 bg-[#F0F0F0] rounded-lg overflow-hidden">
+                <Image src={book.cover} alt={book.title} fill className="object-contain p-0.5" />
+              </div>
+              <div>
+                <p className="font-bold text-base text-black leading-snug">{book.title}</p>
+                <p className="text-sm text-gray-400 mt-1">{book.author}</p>
+              </div>
+            </div>
+            {/* Postęp */}
+            <div className="px-6 py-4 border-b border-gray-100">
+              <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
+                <span>Postęp czytania</span>
+                <span className="font-bold text-black">{Math.round(((currentIndex + 1) / analysis.sections.length) * 100)}%</span>
+              </div>
+              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full bg-[#FFD400] rounded-full transition-all duration-300" style={{ width: `${((currentIndex + 1) / analysis.sections.length) * 100}%` }} />
+              </div>
+            </div>
+            {/* Lista rozdziałów */}
+            <div className="px-4 py-4 flex flex-col gap-1">
+              {analysis.sections.map((s, i) => (
+                <button
+                  key={s.id}
+                  onClick={() => { setActiveSection(s.id); setTocOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                  className={`flex items-start gap-3 w-full text-left px-4 py-4 rounded-xl transition-all ${
+                    activeSection === s.id ? "bg-[#FFD400] text-black" : "text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  <span className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black mt-0.5 ${
+                    activeSection === s.id ? "bg-black text-[#FFD400]" : "bg-gray-100 text-gray-400"
+                  }`}>{i + 1}</span>
+                  <span className="text-[15px] font-medium leading-snug">{s.title}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
+      <div className="max-w-3xl mx-auto px-4 py-8">
           {/* Main reading area */}
           <main>
             {/* Paywall — shown for non-free books without subscription */}
@@ -468,7 +469,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
                   <span className="text-xs font-black uppercase tracking-wider text-black/60">Analiza Lumeo</span>
                 </div>
                 <h1 className="text-xl font-extrabold text-black mb-2">{book.title}</h1>
-                <p className="text-sm text-black/70 leading-relaxed">{analysis.intro}</p>
+                <p className="text-sm text-black/70 leading-relaxed text-justify">{analysis.intro}</p>
                 <div className="flex items-center gap-4 mt-4 text-xs font-semibold text-black/60">
                   <span className="flex items-center gap-1">
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -561,7 +562,6 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
             )}
 
           </main>
-        </div>
       </div>
     </div>
   );
