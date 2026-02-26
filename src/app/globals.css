@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #FFD400;
   --color-primary-hover: #F19F00;
@@ -32,4 +34,9 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+html.dark body {
+  background: #111827;
+  color: #f3f4f6;
 }

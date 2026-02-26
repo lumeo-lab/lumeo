@@ -7,7 +7,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 h-20 flex items-center gap-6">
         {/* Logo */}
         <Link href="/" className="shrink-0">
@@ -24,36 +24,36 @@ export default function Header() {
             <input
               type="text"
               placeholder="Znajdź analizę..."
-              className="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFD400] focus:border-transparent transition"
+              className="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFD400] focus:border-transparent transition"
             />
           </div>
         </div>
 
         {/* Nav desktop */}
         <nav className="hidden lg:flex items-center gap-1 ml-auto">
-          <Link href="/" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition">
+          <Link href="/" className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition">
             Strona główna
           </Link>
-          <Link href="/ksiazki" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition">
+          <Link href="/ksiazki" className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition">
             Książki
           </Link>
-          <Link href="/cennik" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition">
+          <Link href="/cennik" className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition">
             Cennik
           </Link>
-          <Link href="/o-nas" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition">
+          <Link href="/o-nas" className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition">
             O nas
           </Link>
-          <Link href="/kontakt" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition">
+          <Link href="/kontakt" className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition">
             Kontakt
           </Link>
-          <Link href="/blog" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition">
+          <Link href="/blog" className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition">
             Blog
           </Link>
         </nav>
 
         {/* Mobile menu button */}
         <button
-          className="lg:hidden ml-auto p-2 rounded-lg hover:bg-gray-100"
+          className="lg:hidden ml-auto p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Menu"
         >
@@ -69,21 +69,21 @@ export default function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-gray-100 bg-white">
+        <div className="lg:hidden border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900">
           <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
             <div className="mb-3">
               <input
                 type="text"
                 placeholder="Znajdź analizę..."
-                className="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
+                className="w-full px-4 py-2.5 text-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFD400]"
               />
             </div>
-            <Link href="/" className="px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg" onClick={() => setMobileOpen(false)}>Strona główna</Link>
-            <Link href="/ksiazki" className="px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg" onClick={() => setMobileOpen(false)}>Książki</Link>
-            <Link href="/cennik" className="px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg" onClick={() => setMobileOpen(false)}>Cennik</Link>
-            <Link href="/o-nas" className="px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg" onClick={() => setMobileOpen(false)}>O nas</Link>
-            <Link href="/kontakt" className="px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg" onClick={() => setMobileOpen(false)}>Kontakt</Link>
-            <Link href="/blog" className="px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg" onClick={() => setMobileOpen(false)}>Blog</Link>
+            <Link href="/" className="px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg" onClick={() => setMobileOpen(false)}>Strona główna</Link>
+            <Link href="/ksiazki" className="px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg" onClick={() => setMobileOpen(false)}>Książki</Link>
+            <Link href="/cennik" className="px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg" onClick={() => setMobileOpen(false)}>Cennik</Link>
+            <Link href="/o-nas" className="px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg" onClick={() => setMobileOpen(false)}>O nas</Link>
+            <Link href="/kontakt" className="px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg" onClick={() => setMobileOpen(false)}>Kontakt</Link>
+            <Link href="/blog" className="px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg" onClick={() => setMobileOpen(false)}>Blog</Link>
           </div>
         </div>
       )}

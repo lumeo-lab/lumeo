@@ -36,12 +36,12 @@ export default function Topbar() {
     .slice(0, 2);
 
   return (
-    <div className="relative z-[60] bg-white border-b border-gray-200 text-sm py-3.5">
+    <div className="relative z-[60] bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 text-sm py-3.5">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between gap-4">
         {/* Left: contact */}
         <a
           href="mailto:kontakt@lumeo.pl"
-          className="flex items-center gap-1.5 text-gray-500 hover:text-black transition-colors"
+          className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -52,19 +52,19 @@ export default function Topbar() {
 
         {/* Center: social icons */}
         <div className="hidden md:flex items-center gap-3">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-gray-400 hover:text-black transition-colors">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-gray-400 hover:text-black dark:hover:text-white transition-colors">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
             </svg>
           </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-400 hover:text-black transition-colors">
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-400 hover:text-black dark:hover:text-white transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
               <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
               <circle cx="12" cy="12" r="4" />
               <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
             </svg>
           </a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-gray-400 hover:text-black transition-colors">
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-gray-400 hover:text-black dark:hover:text-white transition-colors">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
               <circle cx="4" cy="4" r="2" />
@@ -85,7 +85,7 @@ export default function Topbar() {
                   <div className="w-6 h-6 rounded-full bg-[#FFD400] flex items-center justify-center font-black text-[10px] text-black shrink-0">
                     {initials || "?"}
                   </div>
-                  <span className="text-gray-600 text-xs max-w-[120px] truncate">
+                  <span className="text-gray-600 dark:text-gray-300 text-xs max-w-[120px] truncate">
                     {user.user_metadata?.full_name ?? user.email}
                   </span>
                   <svg className={`w-3 h-3 text-gray-400 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -136,7 +136,7 @@ export default function Topbar() {
             ) : (
               /* Logged out */
               <>
-                <Link href="/logowanie" className="flex items-center gap-1.5 text-gray-600 hover:text-black transition-colors">
+                <Link href="/logowanie" className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>

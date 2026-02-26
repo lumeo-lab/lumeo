@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { AuthProvider } from "@/context/AuthContext";
 import { BookStatusProvider } from "@/context/BookStatusContext";
+import { DarkModeProvider } from "@/context/DarkModeContext";
 
 export const metadata: Metadata = {
   title: "Lumeo — Praktyczne analizy książek biznesowych i rozwojowych",
@@ -23,10 +24,12 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <BookStatusProvider>
-            <Topbar />
-            <Header />
-            <main>{children}</main>
-            <Footer />
+            <DarkModeProvider>
+              <Topbar />
+              <Header />
+              <main>{children}</main>
+              <Footer />
+            </DarkModeProvider>
           </BookStatusProvider>
         </AuthProvider>
       </body>

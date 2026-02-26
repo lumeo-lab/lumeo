@@ -6,6 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { allBooks } from "@/lib/data";
 import { useBookStatus } from "@/context/BookStatusContext";
+import { useDarkMode } from "@/context/DarkModeContext";
 import type { Analysis } from "@/lib/analysis-types";
 import { analysisJakZdobycPrzyjaciol } from "@/lib/analysis-jak-zdobyc";
 
@@ -215,7 +216,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
   const analysis = getAnalysis(book.id, book.category);
   const [activeSection, setActiveSection] = useState(analysis.sections[0].id);
   const [tocOpen, setTocOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useDarkMode();
 
   const currentIndex = analysis.sections.findIndex(s => s.id === activeSection);
   const prevSection = currentIndex > 0 ? analysis.sections[currentIndex - 1] : null;
@@ -378,7 +379,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
               </svg>
             </button>
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               title={darkMode ? "Tryb dzienny" : "Tryb nocny"}
               className={`w-14 h-14 border rounded-2xl flex items-center justify-center transition-colors shadow-sm group ${darkMode ? "bg-gray-800 border-gray-700 hover:bg-gray-700" : "bg-white border-gray-200 hover:bg-gray-100"}`}
             >
