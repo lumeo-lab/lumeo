@@ -354,7 +354,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
         </div>
       )}
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex gap-5 items-start">
 
           {/* TOC icon — desktop only, sticky po lewej */}
@@ -362,9 +362,9 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
             <button
               onClick={() => setTocOpen(true)}
               title="Spis treści"
-              className="w-11 h-11 bg-white border border-gray-200 rounded-xl flex items-center justify-center hover:bg-[#FFD400] hover:border-[#FFD400] transition-colors shadow-sm group"
+              className="w-14 h-14 bg-white border border-gray-200 rounded-2xl flex items-center justify-center hover:bg-[#FFD400] hover:border-[#FFD400] transition-colors shadow-sm group"
             >
-              <svg className="w-5 h-5 text-gray-500 group-hover:text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-7 h-7 text-gray-500 group-hover:text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
