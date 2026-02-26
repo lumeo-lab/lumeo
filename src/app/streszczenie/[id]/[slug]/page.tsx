@@ -250,14 +250,14 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
           <div className="w-px h-5 bg-gray-200 shrink-0" />
           <button
             onClick={() => setTocOpen(true)}
-            className="flex items-center gap-1.5 text-sm font-semibold text-gray-600 hover:text-black bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors shrink-0"
+            className="lg:hidden flex items-center gap-1.5 text-sm font-semibold text-gray-600 hover:text-black bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors shrink-0"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
             <span className="hidden sm:inline">Spis treści</span>
           </button>
-          <div className="w-px h-5 bg-gray-200 shrink-0" />
+          <div className="lg:hidden w-px h-5 bg-gray-200 shrink-0" />
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <div className="relative w-6 h-8 shrink-0 hidden sm:block">
               <Image src={book.cover} alt={book.title} fill className="object-contain" />
@@ -303,7 +303,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
       {tocOpen && (
         <div className="fixed inset-0 z-50 flex">
           <div className="absolute inset-0 bg-black/50" onClick={() => setTocOpen(false)} />
-          <div className="relative ml-auto w-full sm:w-[420px] max-w-[90vw] bg-white h-full overflow-y-auto shadow-2xl flex flex-col">
+          <div className="relative w-full sm:w-[420px] max-w-[90vw] bg-white h-full overflow-y-auto shadow-2xl flex flex-col">
             {/* Nagłówek drawera */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 sticky top-0 bg-white z-10">
               <h2 className="font-extrabold text-xl text-black">Spis treści</h2>
@@ -354,9 +354,24 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
         </div>
       )}
 
-      <div className="max-w-3xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="flex gap-5 items-start">
+
+          {/* TOC icon — desktop only, sticky po lewej */}
+          <div className="hidden lg:block sticky top-20 shrink-0">
+            <button
+              onClick={() => setTocOpen(true)}
+              title="Spis treści"
+              className="w-11 h-11 bg-white border border-gray-200 rounded-xl flex items-center justify-center hover:bg-[#FFD400] hover:border-[#FFD400] transition-colors shadow-sm group"
+            >
+              <svg className="w-5 h-5 text-gray-500 group-hover:text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+
           {/* Main reading area */}
-          <main>
+          <main className="flex-1 min-w-0">
             {/* Intro card — only show on first section */}
             {currentIndex === 0 && (
               <div className="bg-[#FFD400] rounded-2xl p-6 mb-6">
@@ -454,6 +469,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
               </div>
             </div>
           </main>
+        </div>
       </div>
     </div>
   );
