@@ -199,14 +199,9 @@ function ContentBlock({ block }: { block: { type: string; text: string } }) {
   }
   if (block.type === "lumeo") {
     return (
-      <div className="border border-[#FFD400]/60 bg-[#FFFCED] rounded-xl px-5 py-4 my-5 flex gap-3">
-        <div className="shrink-0">
-          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#FFD400] text-black font-black text-[10px] mt-0.5">L</span>
-        </div>
-        <div>
-          <p className="text-xs font-bold text-[#7a5f00] uppercase tracking-wider mb-1">Komentarz Lumeo</p>
-          <p className="text-sm text-gray-700 leading-relaxed text-justify">{block.text}</p>
-        </div>
+      <div className="border border-[#FFD400]/60 bg-[#FFFCED] rounded-xl px-5 py-4 my-5">
+        <p className="text-xs font-bold text-[#7a5f00] uppercase tracking-wider mb-1">Komentarz Lumeo</p>
+        <p className="text-sm text-gray-700 leading-relaxed text-justify">{block.text}</p>
       </div>
     );
   }
