@@ -180,9 +180,7 @@ function ContentBlock({ block }: { block: { type: string; text: string } }) {
   }
   if (block.type === "quote") {
     return (
-      <blockquote className="border-l-4 border-[#FFD400] bg-[#FFFCED] px-5 py-4 rounded-r-xl my-5">
-        <p className="text-gray-800 font-medium italic leading-relaxed">{block.text}</p>
-      </blockquote>
+      <p className="italic text-gray-500 leading-relaxed my-4 text-[15px] text-justify">{block.text}</p>
     );
   }
   if (block.type === "insight") {
@@ -199,9 +197,9 @@ function ContentBlock({ block }: { block: { type: string; text: string } }) {
   }
   if (block.type === "lumeo") {
     return (
-      <div className="border border-[#FFD400]/60 bg-[#FFFCED] rounded-xl px-5 py-4 my-5">
+      <div className="border border-[#FFD400]/60 bg-[#FFFCED] rounded-xl px-5 py-4 my-5 mx-8">
         <p className="text-xs font-bold text-[#7a5f00] uppercase tracking-wider mb-1">Komentarz Lumeo</p>
-        <p className="text-sm text-gray-700 leading-relaxed text-justify">{block.text}</p>
+        <p className="text-[13px] text-gray-700 leading-relaxed text-justify">{block.text}</p>
       </div>
     );
   }
@@ -370,9 +368,6 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
             {/* Intro card — only show on first section */}
             {currentIndex === 0 && (
               <div className="bg-[#FFD400] rounded-2xl p-6 mb-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-black uppercase tracking-wider text-black/60">Analiza Lumeo</span>
-                </div>
                 <h1 className="text-xl font-extrabold text-black mb-2">{book.title}</h1>
                 <p className="text-sm text-black/70 leading-relaxed text-justify">{analysis.intro}</p>
                 <div className="flex items-center gap-4 mt-4 text-xs font-semibold text-black/60">
