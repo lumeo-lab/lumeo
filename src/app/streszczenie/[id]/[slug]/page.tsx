@@ -214,7 +214,8 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
 
   const { isInList, toggle } = useBookStatus();
   const finished = isInList(book.id, "finished");
-  const liked = isInList(book.id, "favorites");
+  const liked    = isInList(book.id, "favorites");
+  const reading  = isInList(book.id, "reading");
 
   const analysis = getAnalysis(book.id, book.category);
   const [activeSection, setActiveSection] = useState(analysis.sections[0].id);
@@ -229,67 +230,86 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
     <div className="min-h-screen bg-[#F6F6F6]">
 
       {/* Sticky reading header */}
-      <div className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-4">
-          <Link
-            href={`/p/${book.id}/${book.slug}`}
-            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-black transition-colors shrink-0"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-            </svg>
-            Wróć
-          </Link>
-          <div className="w-px h-5 bg-gray-200 shrink-0" />
-          <button
-            onClick={() => setTocOpen(true)}
-            className="lg:hidden flex items-center gap-1.5 text-sm font-semibold text-gray-600 hover:text-black bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors shrink-0"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <span className="hidden sm:inline">Spis treści</span>
-          </button>
-          <div className="lg:hidden w-px h-5 bg-gray-200 shrink-0" />
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <div className="relative w-6 h-8 shrink-0 hidden sm:block">
-              <Image src={book.cover} alt={book.title} fill className="object-contain" />
+      <div className="sticky top-0 z-40 shadow-sm">
+
+        {/* Breadcrumb — yellow bar */}
+        <div className="bg-[#FFD400]">
+          <div className="max-w-5xl mx-auto px-4 py-2 flex items-center gap-1.5 text-xs font-medium text-black/60 flex-wrap">
+            <Link href="/" className="hover:text-black transition-colors">Strona główna</Link>
+            <span>/</span>
+            <Link href="/ksiazki" className="hover:text-black transition-colors">Książki</Link>
+            <span>/</span>
+            <Link href="/ksiazki" className="hover:text-black transition-colors">{book.category}</Link>
+            <span>/</span>
+            <span className="font-bold text-black truncate max-w-[200px] sm:max-w-xs">{book.title}</span>
+          </div>
+        </div>
+
+        {/* Book info bar — white */}
+        <div className="bg-white border-b border-gray-100">
+          <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-4">
+
+            {/* Cover + title + author */}
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="relative w-8 h-12 shrink-0">
+                <Image src={book.cover} alt={book.title} fill className="object-contain" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-extrabold text-black text-sm leading-tight line-clamp-2">{book.title}</p>
+                <p className="text-xs text-gray-400 mt-0.5">Autor: {book.author}</p>
+              </div>
             </div>
-            <span className="text-sm font-bold text-black truncate">{book.title}</span>
-            <span className="hidden sm:inline text-xs text-gray-400 truncate">— {book.author}</span>
+
+            {/* Chapter progress */}
+            <div className="hidden sm:flex flex-col items-center gap-0.5 shrink-0 text-center">
+              <span className="text-xs font-bold text-black">Rozdział {currentIndex + 1}/{analysis.sections.length}</span>
+              <span className="text-[11px] text-gray-400">{book.readTime} min czytania</span>
+            </div>
+
+            {/* Action icons */}
+            <div className="flex items-center gap-0.5 shrink-0">
+              {/* TOC */}
+              <button
+                onClick={() => setTocOpen(true)}
+                title="Spis treści"
+                className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-gray-400 hover:text-black"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              {/* Reading list */}
+              <button
+                onClick={() => toggle(book.id, "reading")}
+                title="Czytam teraz"
+                className={`p-2.5 rounded-xl transition-colors ${reading ? "text-[#b8860b] bg-[#FFFCED]" : "text-gray-400 hover:bg-gray-100 hover:text-black"}`}
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </button>
+              {/* Finished */}
+              <button
+                onClick={() => toggle(book.id, "finished")}
+                title="Oznacz jako ukończoną"
+                className={`p-2.5 rounded-xl transition-colors ${finished ? "text-green-600 bg-green-50" : "text-gray-400 hover:bg-gray-100 hover:text-green-500"}`}
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
+            </div>
+
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => toggle(book.id, "favorites")}
-              title="Ulubione"
-              className={`p-2 rounded-lg transition-all ${liked ? "text-red-500 bg-red-50" : "text-gray-400 hover:text-red-400 hover:bg-red-50"}`}
-            >
-              <svg className="w-4 h-4" fill={liked ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-            </button>
-            <button
-              onClick={() => toggle(book.id, "finished")}
-              className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg border-2 transition-all ${
-                finished
-                  ? "bg-green-50 border-green-300 text-green-600"
-                  : "border-gray-200 text-gray-500 hover:border-green-300 hover:text-green-600 hover:bg-green-50"
-              }`}
-            >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              {finished ? "Ukończona" : "Oznacz jako ukończoną"}
-            </button>
+          {/* Progress bar */}
+          <div className="h-0.5 bg-gray-100">
+            <div
+              className="h-full bg-[#FFD400] transition-all duration-300"
+              style={{ width: `${((currentIndex + 1) / analysis.sections.length) * 100}%` }}
+            />
           </div>
         </div>
-        {/* Progress bar */}
-        <div className="h-0.5 bg-gray-100">
-          <div
-            className="h-full bg-[#FFD400] transition-all duration-300"
-            style={{ width: `${((currentIndex + 1) / analysis.sections.length) * 100}%` }}
-          />
-        </div>
+
       </div>
 
       {/* TOC Drawer */}
