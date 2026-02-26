@@ -2101,7 +2101,11 @@ export const allBooks = [
   },
 ];
 
-export const freeBooks = allBooks.filter(b => b.isFree);
+export const freeBooks = [
+  allBooks.find(b => b.id === 1)!,  // Jak zdobyć przyjaciół
+  allBooks.find(b => b.id === 3)!,  // Atomowe nawyki
+  allBooks.find(b => b.id === 6)!,  // Siła nawyku
+].map(b => ({ ...b, isFree: true as const }));
 
 export const recentBooks = [...allBooks].reverse().slice(0, 12);
 
