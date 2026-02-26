@@ -171,21 +171,16 @@ function getAnalysis(bookId: number, category: string): Analysis {
 }
 
 /* ── Reading components ─────────────────────────────── */
-function ContentBlock({ block }: { block: { type: string; text: string } }) {
+function ContentBlock({ block, dark }: { block: { type: string; text: string }; dark: boolean }) {
   if (block.type === "h3") {
-    return <h3 className="text-base font-extrabold text-black mt-7 mb-3 pb-2 border-b border-gray-200">{block.text}</h3>;
+    return <h3 className={`text-base font-extrabold mt-7 mb-3 pb-2 border-b ${dark ? "text-white border-gray-600" : "text-black border-gray-200"}`}>{block.text}</h3>;
   }
-  if (block.type === "p") {
-    return <p className="text-gray-700 leading-relaxed mb-4 text-base text-justify">{block.text}</p>;
-  }
-  if (block.type === "quote") {
-    return (
-      <p className="text-gray-700 leading-relaxed mb-4 text-base text-justify">{block.text}</p>
-    );
+  if (block.type === "p" || block.type === "quote") {
+    return <p className={`leading-relaxed mb-4 text-base text-justify ${dark ? "text-gray-300" : "text-gray-700"}`}>{block.text}</p>;
   }
   if (block.type === "insight") {
     return (
-      <div className="bg-black text-white rounded-xl px-5 py-4 my-5 flex gap-3">
+      <div className={`rounded-xl px-5 py-4 my-5 flex gap-3 ${dark ? "bg-gray-700" : "bg-black"}`}>
         <span className="text-[#FFD400] shrink-0 mt-0.5">
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.3 4.7-3.3 6l-.7 2H9l-.7-2A7 7 0 0 1 5 9a7 7 0 0 1 7-7zm0 18a1 1 0 0 0 0 2 1 1 0 0 0 0-2z"/>
@@ -197,9 +192,9 @@ function ContentBlock({ block }: { block: { type: string; text: string } }) {
   }
   if (block.type === "lumeo") {
     return (
-      <div className="border border-[#FFD400]/60 bg-[#FFFCED] rounded-xl px-5 py-4 my-5 mx-8">
+      <div className={`border rounded-xl px-5 py-4 my-5 mx-8 ${dark ? "border-[#FFD400]/40 bg-[#2a2500]" : "border-[#FFD400]/60 bg-[#FFFCED]"}`}>
         <p className="text-xs font-bold text-[#7a5f00] uppercase tracking-wider mb-1">Komentarz Lumeo</p>
-        <p className="text-[13px] text-gray-700 leading-relaxed text-justify">{block.text}</p>
+        <p className={`text-[13px] leading-relaxed text-justify ${dark ? "text-gray-300" : "text-gray-700"}`}>{block.text}</p>
       </div>
     );
   }
@@ -220,6 +215,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
   const analysis = getAnalysis(book.id, book.category);
   const [activeSection, setActiveSection] = useState(analysis.sections[0].id);
   const [tocOpen, setTocOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   const currentIndex = analysis.sections.findIndex(s => s.id === activeSection);
   const prevSection = currentIndex > 0 ? analysis.sections[currentIndex - 1] : null;
@@ -227,7 +223,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
   const currentSection = analysis.sections[currentIndex];
 
   return (
-    <div className="min-h-screen bg-[#F6F6F6]">
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? "bg-gray-900" : "bg-[#F6F6F6]"}`}>
 
       {/* Sticky reading header */}
       <div className="sticky top-0 z-40 shadow-sm">
@@ -370,32 +366,47 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex gap-5 items-start">
 
-          {/* TOC icon — desktop only, sticky po lewej */}
-          <div className="hidden lg:block sticky top-20 shrink-0">
+          {/* TOC icon + dark mode — desktop only, sticky po lewej */}
+          <div className="hidden lg:flex flex-col gap-2 sticky top-20 shrink-0">
             <button
               onClick={() => setTocOpen(true)}
               title="Spis treści"
-              className="w-14 h-14 bg-white border border-gray-200 rounded-2xl flex items-center justify-center hover:bg-[#FFD400] hover:border-[#FFD400] transition-colors shadow-sm group"
+              className={`w-14 h-14 border rounded-2xl flex items-center justify-center hover:bg-[#FFD400] hover:border-[#FFD400] transition-colors shadow-sm group ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
             >
-              <svg className="w-7 h-7 text-gray-500 group-hover:text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className={`w-7 h-7 group-hover:text-black ${darkMode ? "text-gray-400" : "text-gray-500"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
+            </button>
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              title={darkMode ? "Tryb dzienny" : "Tryb nocny"}
+              className={`w-14 h-14 border rounded-2xl flex items-center justify-center transition-colors shadow-sm group ${darkMode ? "bg-gray-800 border-gray-700 hover:bg-gray-700" : "bg-white border-gray-200 hover:bg-gray-100"}`}
+            >
+              {darkMode ? (
+                <svg className="w-6 h-6 text-[#FFD400]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1M4.22 4.22l.707.707M18.364 18.364l.707.707M1 12h1M21 12h1M4.22 19.778l.707-.707M18.364 5.636l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6 text-gray-500 group-hover:text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              )}
             </button>
           </div>
 
           {/* Main reading area */}
           <main className="flex-1 min-w-0">
             {/* Section content */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-8 sm:p-12">
+            <div className={`rounded-2xl border p-8 sm:p-12 transition-colors duration-300 ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"}`}>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-bold text-[#7a5f00] bg-[#FFFCED] px-2 py-0.5 rounded-full">
                   Rozdział {currentIndex + 1} z {analysis.sections.length}
                 </span>
               </div>
-              <h2 className="text-xl font-extrabold text-black leading-tight mb-6">{currentSection.title}</h2>
+              <h2 className={`text-xl font-extrabold leading-tight mb-6 ${darkMode ? "text-white" : "text-black"}`}>{currentSection.title}</h2>
               <div>
                 {currentSection.content.map((block, i) => (
-                  <ContentBlock key={i} block={block} />
+                  <ContentBlock key={i} block={block} dark={darkMode} />
                 ))}
               </div>
             </div>
@@ -406,7 +417,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
                 {prevSection ? (
                   <button
                     onClick={() => setActiveSection(prevSection.id)}
-                    className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-black bg-white border border-gray-200 hover:border-gray-300 px-4 py-2.5 rounded-xl transition-all"
+                    className={`flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-all border ${darkMode ? "text-gray-300 bg-gray-800 border-gray-700 hover:border-gray-500 hover:text-white" : "text-gray-500 bg-white border-gray-200 hover:border-gray-300 hover:text-black"}`}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
