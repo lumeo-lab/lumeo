@@ -176,11 +176,11 @@ function ContentBlock({ block }: { block: { type: string; text: string } }) {
     return <h3 className="text-base font-extrabold text-black mt-7 mb-3 pb-2 border-b border-gray-200">{block.text}</h3>;
   }
   if (block.type === "p") {
-    return <p className="text-gray-700 leading-relaxed mb-4 text-[15px] text-justify">{block.text}</p>;
+    return <p className="text-gray-700 leading-relaxed mb-4 text-base text-justify">{block.text}</p>;
   }
   if (block.type === "quote") {
     return (
-      <p className="italic text-gray-500 leading-relaxed my-4 text-[15px] text-justify">{block.text}</p>
+      <p className="text-gray-700 leading-relaxed mb-4 text-base text-justify">{block.text}</p>
     );
   }
   if (block.type === "insight") {
@@ -365,24 +365,6 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
 
           {/* Main reading area */}
           <main className="flex-1 min-w-0">
-            {/* Intro card — only show on first section */}
-            {currentIndex === 0 && (
-              <div className="bg-[#FFD400] rounded-2xl p-6 mb-6">
-                <h1 className="text-xl font-extrabold text-black mb-2">{book.title}</h1>
-                <p className="text-sm text-black/70 leading-relaxed text-justify">{analysis.intro}</p>
-                <div className="flex items-center gap-4 mt-4 text-xs font-semibold text-black/60">
-                  <span className="flex items-center gap-1">
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    {book.readTime} min czytania
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                    {analysis.sections.length} rozdziałów
-                  </span>
-                </div>
-              </div>
-            )}
-
             {/* Section content */}
             <div className="bg-white rounded-2xl border border-gray-100 p-8 sm:p-12">
               <div className="flex items-center gap-2 mb-1">
