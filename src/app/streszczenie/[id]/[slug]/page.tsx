@@ -234,7 +234,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
 
         {/* Breadcrumb — yellow bar */}
         <div className="bg-[#FFD400]">
-          <div className="max-w-7xl mx-auto px-4 py-3.5 flex items-center gap-1.5 text-xs font-medium text-black/60 flex-wrap">
+          <div className="max-w-7xl mx-auto px-4 py-5 flex items-center gap-1.5 text-xs font-medium text-black/60 flex-wrap">
             <Link href="/" className="hover:text-black transition-colors">Strona główna</Link>
             <span>/</span>
             <Link href="/ksiazki" className="hover:text-black transition-colors">Książki</Link>
@@ -247,7 +247,7 @@ export default function StreszczeniePage({ params }: { params: Promise<{ id: str
 
         {/* Book info bar — white */}
         <div className="bg-white border-b border-gray-100">
-          <div className="max-w-7xl mx-auto px-4 py-4 flex items-center gap-4">
+          <div className="max-w-7xl mx-auto px-4 py-6 flex items-center gap-4">
 
             {/* Cover + title + author */}
             <div className="flex items-center gap-3 flex-1 min-w-0">
